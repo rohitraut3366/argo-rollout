@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterAnalysisTemplate
+metadata:
+  name: 5xx-error-rate-alb
+spec:
+  metrics:
+    - name: error-rate
+      interval: 2m
+      successCondition: result <  200
+      failureLimit: 3
+      provider:
+        datadog:
+          interval: 5m
+          query:
+            "sum:aws.applicationelb.httpcode_target_5xx{env:production}.as_count()"

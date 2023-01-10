@@ -1,0 +1,62 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-name
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/group.name: app-name
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-west-2:855639001201:certificate/5837000d-3a25-4aea-8781-cd2546f5483c"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-stable
+            port:
+              name: use-annotation
+
+{{/*---*/}}
+{{/*apiVersion: networking.k8s.io/v1*/}}
+{{/*kind: Ingress*/}}
+{{/*metadata:*/}}
+{{/*  name: test*/}}
+{{/*  annotations:*/}}
+{{/*    alb.ingress.kubernetes.io/group.name: test*/}}
+{{/*    alb.ingress.kubernetes.io/scheme: internet-facing*/}}
+{{/*    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'*/}}
+{{/*    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-west-2:855639001201:certificate/5837000d-3a25-4aea-8781-cd2546f5483c"*/}}
+{{/*    alb.ingress.kubernetes.io/actions.response: >-*/}}
+{{/*      {*/}}
+{{/*              "Type":"forward",*/}}
+{{/*              "ForwardConfig":{*/}}
+{{/*                "TargetGroups":[*/}}
+{{/*                  {*/}}
+{{/*                      "Weight":10,*/}}
+{{/*                      "ServiceName":"app-canary",*/}}
+{{/*                      "ServicePort":"80"*/}}
+{{/*                  },*/}}
+{{/*                  {*/}}
+{{/*                      "Weight":90,*/}}
+{{/*                      "ServiceName":"app-stable",*/}}
+{{/*                      "ServicePort":"80"*/}}
+{{/*                  }*/}}
+{{/*                ]*/}}
+{{/*              }*/}}
+{{/*            }*/}}
+{{/*spec:*/}}
+{{/*  rules:*/}}
+{{/*  - http:*/}}
+{{/*      paths:*/}}
+{{/*      - path: /*/}}
+{{/*        pathType: Prefix*/}}
+{{/*        backend:*/}}
+{{/*          service:*/}}
+{{/*            name: response*/}}
+{{/*            port:*/}}
+{{/*              name: use-annotation*/}}
